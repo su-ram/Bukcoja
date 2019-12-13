@@ -38,11 +38,12 @@
   </div>
   
   
+  
  ***아두이노 Arduino***
  
  - 화재경보기, 진동 침대, LED 무드등
  
-<div margin = "0 auto">
+<div>
   <img src = "https://user-images.githubusercontent.com/20367043/70809828-f4442d80-1e05-11ea-8e0b-56a63844baf0.png"/>
   <img src = "https://user-images.githubusercontent.com/20367043/70809908-1dfd5480-1e06-11ea-9acd-21feb1a0910e.png"/>
   <img src = "https://user-images.githubusercontent.com/20367043/70809928-281f5300-1e06-11ea-9667-94090d019644.png"/>
