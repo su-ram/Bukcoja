@@ -24,7 +24,7 @@
 
 ##  :gem: 결과물 Results 
 <div>
-  <img src = "https://user-images.githubusercontent.com/20367043/70793400-8e907b00-1dde-11ea-96d5-43282423d8af.png" />
+  <img src = "https://user-images.githubusercontent.com/20367043/70794189-5be78200-1de0-11ea-94c8-4ebeb0f71096.png" />
   </div>
 
 
