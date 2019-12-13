@@ -57,7 +57,7 @@ SW
   
   &nbsp;
   
- ***2. 모바일 앱***
+ ***2. 모바일 앱 Mobile Application***
  
  <div>
   <img src = "https://user-images.githubusercontent.com/20367043/70823616-a3dbc880-1e23-11ea-8fe2-845f7b2b82b9.png" width = "30%"/>
@@ -81,7 +81,7 @@ SW
   
   &nbsp;
   
-  ***4. 데모품 제작***
+  ***4. 데모품 제작 Demo Production***
   <div>
   <img src = "https://user-images.githubusercontent.com/20367043/70811085-44bc8a80-1e08-11ea-95b7-3a22c488f089.png"/>
   </div>
