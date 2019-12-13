@@ -24,7 +24,7 @@ SW
   * LTE 통신
 ```
 
-<center>2018.03 ~ 2018.10</center>
+<center>가운데</center>  
 
 &nbsp;
 
