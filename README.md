@@ -34,14 +34,14 @@
   
  ***아두이노 Arduino***
  
- - 화재경보기
+ - 화재경보기, 진동 침대, LED 무드등
  
 <div>
   <img src = "https://user-images.githubusercontent.com/20367043/70794714-a5849c80-1de1-11ea-91da-0efa4719fe42.png"/>
+    <img src = "https://user-images.githubusercontent.com/20367043/70794886-090eca00-1de2-11ea-980f-2fda0361041d.png />
+
   </div>
   
-  - 진동 침대
-  <img src = "https://user-images.githubusercontent.com/20367043/70794886-090eca00-1de2-11ea-980f-2fda0361041d.png />
 
 
 ## :tv: 작동 영상 Video 
