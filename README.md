@@ -22,12 +22,12 @@
 - HW : Arduino(C)
 - LTE : SKT LTE CAT M1
 
+&nbsp;
+
 ##  :gem: 결과물 Results 
 
-***관리자 웹페이지 Admin Web page***
+***1. 관리자 웹페이지 Admin Web page***
 <div>
-  
-  &nbsp;
   
   - 메인 화면
   
@@ -42,7 +42,7 @@
   
   &nbsp;
   
- ***아두이노 Arduino***
+ ***2. 아두이노 Arduino***
  
  - 화재경보기, 진동 침대, LED 무드등
  
@@ -55,7 +55,7 @@
   
   &nbsp;
   
-  ***데모품 제작***
+  ***3. 데모품 제작***
   <div>
   <img src = "https://user-images.githubusercontent.com/20367043/70811085-44bc8a80-1e08-11ea-95b7-3a22c488f089.png"/>
   </div>
