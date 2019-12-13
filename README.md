@@ -12,6 +12,7 @@
 *2018.03 ~ 2018.10*
 
 
+
 ##  :art:  사용 기술 Skill sets
 - Mobile os : Android(Java)
 - Front End : HTML, Javascript, Ajax, Jquery
@@ -37,7 +38,7 @@
   <img src = "https://user-images.githubusercontent.com/20367043/70794242-8df8e400-1de0-11ea-9b29-cf6b8354be73.png" />
   </div>
   
-  
+  &nbsp;
   
  ***아두이노 Arduino***
  
@@ -50,6 +51,7 @@
 
   </div>
   
+  &nbsp;
   
   ***데모품 제작***
   <div>
@@ -57,6 +59,7 @@
   </div>
   
 
+&nbsp;
 
 ## :tv: 작동 영상 Video 
 https://www.youtube.com/watch?v=FJx439WB9ak
