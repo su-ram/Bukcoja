@@ -27,7 +27,13 @@
 
 ***관리자 웹페이지 Admin Web page***
 <div>
+  
+  - 메인 화면
+  
   <img src = "https://user-images.githubusercontent.com/20367043/70794189-5be78200-1de0-11ea-94c8-4ebeb0f71096.png" />
+  
+  - 데이터 시각화 화면
+  
   <img src = "https://user-images.githubusercontent.com/20367043/70794242-8df8e400-1de0-11ea-9b29-cf6b8354be73.png" />
   </div>
   
