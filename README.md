@@ -37,7 +37,7 @@ SW
 - Server os : Ubuntu
 - DB : Mysql
 - HW : Arduino - C 
-- LTE : SKT LTE CAT M1
+- LTE : SKT Cat.M1
 - Open API : ThingPlug
 
 &nbsp;
