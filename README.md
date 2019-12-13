@@ -22,7 +22,10 @@
 - LTE : SKT LTE CAT M1
 
 
-##  :gem: 실제 화면 Screenshots 
+##  :gem: 결과물 Results 
+<div>
+  <img src = "https://user-images.githubusercontent.com/20367043/70793400-8e907b00-1dde-11ea-96d5-43282423d8af.png" width = "100%"/>
+  </div>
 
 
 ## :tv: 작동 영상 Video 
