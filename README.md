@@ -25,6 +25,7 @@
 
 ##  :gem: 결과물 Results 
 
+&nbsp;
 
 ***관리자 웹페이지 Admin Web page***
 <div>
