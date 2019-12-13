@@ -34,11 +34,12 @@
   
  ***아두이노 Arduino***
  
- -화재경보기
+ - 화재경보기
  
 <div>
-  <img src = "https://user-images.githubusercontent.com/20367043/70794600-563e6c00-1de1-11ea-9912-517488b15774.png"/>
-  </
+  <img src = "https://user-images.githubusercontent.com/20367043/70794714-a5849c80-1de1-11ea-91da-0efa4719fe42.png"/>
+  </div>
+
 
 ## :tv: 작동 영상 Video 
 https://www.youtube.com/watch?v=FJx439WB9ak
