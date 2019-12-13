@@ -15,7 +15,7 @@
 ##  :art:  사용 기술 Skill sets
 - Mobile os : Android(Java)
 - Front End : HTML, Javascript, Ajax, Jquery
-- Back End : php
+- Back End : php, 
 - Server os : Ubuntu
 - DB : Mysql
 - HW : Arduino(C)
