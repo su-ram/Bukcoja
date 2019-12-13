@@ -51,7 +51,7 @@
   </div>
   
   
-  ***데모***
+  ***데모품 제작***
   <div>
   <img src = "https://user-images.githubusercontent.com/20367043/70811085-44bc8a80-1e08-11ea-95b7-3a22c488f089.png"/>
   </div>
