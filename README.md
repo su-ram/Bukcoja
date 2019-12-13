@@ -50,12 +50,14 @@
  ***2. 모바일 앱***
  
  <div>
-  <img src = "https://user-images.githubusercontent.com/20367043/70823616-a3dbc880-1e23-11ea-8fe2-845f7b2b82b9.png"/>
-  <img src = "https://user-images.githubusercontent.com/20367043/70823617-a4745f00-1e23-11ea-8c31-e8e2614ca9ec.png"/>
-  <img src = "https://user-images.githubusercontent.com/20367043/70823618-a4745f00-1e23-11ea-8cc8-b6d801faf6e6.png"/>
+  <img src = "https://user-images.githubusercontent.com/20367043/70823616-a3dbc880-1e23-11ea-8fe2-845f7b2b82b9.png" width = "33%"/>
+  <img src = "https://user-images.githubusercontent.com/20367043/70823617-a4745f00-1e23-11ea-8c31-e8e2614ca9ec.png" width = "33%"/>
+  <img src = "https://user-images.githubusercontent.com/20367043/70823618-a4745f00-1e23-11ea-8cc8-b6d801faf6e6.png" width = "33%"/>
 
   </div>
  
+  &nbsp;
+  
  ***3. 아두이노 Arduino***
  
  - 화재경보기, 진동 침대, LED 무드등
