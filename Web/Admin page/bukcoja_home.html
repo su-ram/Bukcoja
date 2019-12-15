@@ -1,0 +1,992 @@
+<?php
+$conn = mysqli_connect("localhost", "root", "336339340", "fire_detection");
+$query = "SELECT cen,hum FROM data ORDER BY datetime";
+$number=array();
+$return_array=array();
+$cen_data1=0;
+$cen_data2=0;
+$cen_data3=0;
+$hum_data1=0;
+$hum_data2=0;
+$hum_data3=0;
+
+if($result = mysqli_query($conn, $query)){
+  $k=0;
+  while($row = mysqli_fetch_array($result)){ 
+//$row_num = mysqli_num_rows($result);
+
+    if($row['cen']<25)
+      $cen_data1++;
+    else if($row['cen']>=25 && $row['cen']<30)
+      $cen_data2++;
+    else if($row['cen']>=30)
+      $cen_data3++;
+
+    if($row['hum']<43)
+      $hum_data1++;
+    else if($row['hum']>=43 && $row['hum']<45)
+      $hum_data2++;
+    else if($row['cen']>=45)
+      $hum_data3++;
+
+  }
+}
+
+$query = "SELECT * FROM data ORDER BY datetime DESC LIMIT 10";
+$flame_data=array();
+$co_data=array();
+$person_data=array();
+$temp_data=array();
+$hum_data=array();
+$datetime=array();
+if($result = mysqli_query($conn, $query)){
+  $index=0;
+  while($row = mysqli_fetch_array($result)){ 
+    if($row['flame']==1)
+      $row['flame']=0;
+    else if($row['flame']==0)
+      $row['flame']=1;
+
+    $flame_data[]=$row['flame'];
+
+    if($row['co']==1)
+      $row['co']=0;
+    else if($row['co']==0)
+      $row['co']=1;
+    $co_data[]=$row['co'];
+    $person_data[]=$row['person'];
+    $temp_data[]=$row['cen'];
+    $hum_data[]=$row['hum'];
+//$datetime[]=$row['datetime'];
+    array_push($datetime,$row['datetime']);
+    $index++;
+  }
+}
+mysqli_close($conn);
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="shortcut icon" href="assets/img/logo_bukcoja_red1.png"/>
+  <title>Fire Evacuation System</title>
+  <link rel="stylesheet" type="text/css" href="assets/lib/perfect-scrollbar/css/perfect-scrollbar.css"/>
+  <link rel="stylesheet" type="text/css" href="assets/lib/material-design-icons/css/material-design-iconic-font.min.css"/>
+  <link rel="stylesheet" type="text/css" href="assets/lib/jquery.vectormap/jquery-jvectormap-1.2.2.css"/>
+  <link rel="stylesheet" type="text/css" href="assets/lib/jqvmap/jqvmap.min.css"/>
+  <link rel="stylesheet" type="text/css" href="assets/lib/datetimepicker/css/bootstrap-datetimepicker.min.css"/>
+  <link rel="stylesheet" href="assets/css/app.css" type="text/css"/>
+
+
+  <!--data graph-->
+  <script src="https://code.jquery.com/jquery-1.11.0.min.js" ></script>
+
+  <script src="Chart.bundle.js"></script>
+  <script src=" https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="Chart.min.js"></script>
+
+
+
+  <!--unity-->
+  <link rel="stylesheet" href="TemplateData/style.css"/>
+  <script src="TemplateData/UnityProgress.js"></script>  
+  <script src="Build/UnityLoader.js"></script>
+  <script>
+    var gameInstance = UnityLoader.instantiate("gameContainer", "Build/unityProbono3.json", {onProgress: UnityProgress});
+  </script>
+
+  <script type="text/javascript">
+    window.onload = function(){
+      setDivHeight('card-body-unity', 'webgl-content-unity');
+    }
+    function setDivHeight(objSet, objTar){
+      var objSet = document.getElementById(objSet);
+      var objTarHeight = document.getElementById(objTar).offsetHeight;
+      objSet.style.height = objTarHeight + "px";
+    }
+
+  </script>
+
+
+
+  <!--stt-->
+  <script src='annyang/annyang.js'></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/annyang/2.6.0/annyang.min.js"></script>
+  <script>
+    annyang.setLanguage("ko");
+    var recognition = annyang.getSpeechRecognizer();
+    var final_transcript='';
+
+    recognition.interimResults=true;
+    recognition.onresult=function(event){
+       var interim_transcript='';  //중간값
+       final_transcript='';        //결과값
+       document.getElementById('result').innerHTML='인식 완료';
+       for(var i=event.resultIndex;i<event.results.length;i++){
+        if(event.results[i].isFinal){
+          final_transcript+=event.results[i][0].transcript;
+          console.log("final_transcript="+final_transcript);
+        }
+        else{
+          interim_transcript+=event.results[i][0].transcript;
+          console.log("interim_transcript="+interim_transcript);
+        }
+      }
+      document.getElementById('result').innerHTML=final_transcript;
+      console.log('interim='+interim_transcript+'|final='+final_transcript);
+    }
+
+    function startBroadcast(){
+
+      if(document.getElementById('myButton').value=="START"){
+        annyang.start({autoRestart:true,continuous:true});
+        document.getElementById('myButton').value="STOP";
+        document.getElementById('myButton').style.backgroundColor="#ff3300";
+        document.getElementById('myButton').style.border="#ab1919";
+        document.getElementById('myButton').style.textShadow="662828";
+        document.getElementById('guide').innerHTML="안내 방송을 시작합니다.";
+      }
+
+      else if(document.getElementById('myButton').value=="STOP"){
+        annyang.pause();
+        document.getElementById('myButton').value="START";
+        document.getElementById('myButton').style.backgroundColor="#44c767";
+        document.getElementById('myButton').style.border="#18ab29";
+        document.getElementById('myButton').style.textShadow="#2f6627";
+        document.getElementById('guide').innerHTML="";
+      }
+
+    }
+    function btn_up(){
+      if(document.getElementById('myButton').value=="START"){
+        document.getElementById('myButton').style.backgroundColor="#5cbf2a";
+      }
+      else if(document.getElementById('myButton').value=="STOP"){
+        document.getElementById('myButton').style.backgroundColor="#d10c0c";
+      }
+    }
+    function btn_out(){
+      if(document.getElementById('myButton').value=="START"){
+        document.getElementById('myButton').style.backgroundColor="#44c767";
+      }
+      else if(document.getElementById('myButton').value=="STOP"){
+        document.getElementById('myButton').style.backgroundColor="#ff3300";
+      }
+    }
+  </script>
+
+</head>
+<style type="text/css">
+
+#demo .wrapper {
+  display: inline-block;
+  width: 100px;
+  margin: 0 10px 0 0;
+  height: 20px;
+  position: relative;
+}
+
+#demo .parent {
+  height: 100%;
+  width: 100%;
+  display: block;
+  cursor: pointer;
+  line-height: 32px;
+  height: 32px;
+  border-radius: 5px;
+  background: #fff;
+  border: 1px solid #AAA;
+  /*border-bottom: 1px solid #777;*/
+  color: #282D31;
+  font-weight: bold;
+  z-index: 2;
+  position: relative;
+  /*-webkit-transition: border-radius .1s linear, background .1s linear, z-index 0s linear;*/
+  -webkit-transition-delay: .8s;
+  text-align: center;
+}
+
+#demo .parent:hover,
+#demo .content:hover ~ .parent {
+  background: #f9f9f9;
+  -webkit-transition-delay: 0s, 0s, 0s;
+}
+
+#demo .content:hover ~ .parent {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  z-index: 0;
+}
+
+#demo .content {
+  position: absolute;
+  top: 0;
+  display: block;
+  z-index: 1;
+  height: 0;
+  width: 100px;
+  padding-top: 30px;
+  -webkit-transition: height .5s ease;
+  -webkit-transition-delay: .4s;
+  border: 1px solid #777;
+  border-radius: 5px;
+  /*box-shadow: 0 1px 2px rgba(0,0,0,.4);*/
+}
+
+#demo .wrapper:active .content {
+  height: 123px;
+  z-index: 3;
+  -webkit-transition-delay: 0s;
+}
+
+#demo .content:hover {
+  height: 123px;
+  z-index: 3;
+  -webkit-transition-delay: 0s;
+}
+
+
+#demo .content ul {
+  background: #fff;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100%;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+#demo .content ul a {
+  text-decoration: none;
+}
+
+#demo .content li:hover {
+  background: #eee;
+  color: #333;
+}
+
+#demo .content li {
+  list-style: none;
+  text-align: left;
+  color: #888;
+  font-size: 10px;
+  line-height: 30px;
+  height: 30px;
+  padding-left: 10px;
+  border-top: 1px solid #ccc;
+}
+
+#demo .content li:last-of-type {
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+</style>
+<body>
+
+
+  <div class="be-wrapper be-fixed-sidebar" style="z-index:1;">
+    <nav class="navbar navbar-expand fixed-top be-top-header">
+      <div class="container-fluid">
+        <div class="be-navbar-header"><a class="navbar-brand" href="bukcoja_home.html"></a>
+        </div>
+
+        <div class="be-right-navbar">
+          <div class="page-title"><span>Fire Evacuation System</span></div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="be-left-sidebar">
+      <div class="left-sidebar-wrapper"><a class="left-sidebar-toggle" href="#">Fire Evacuation System</a>
+        <div class="left-sidebar-spacer">
+          <div class="left-sidebar-scroll">
+            <div class="left-sidebar-content">
+              <ul class="sidebar-elements">
+                <li class="divider">Menu</li>
+                <li class="active"><a href="bukcoja_home.html"><i class="icon mdi mdi-home"></i><span>Home</span></a>
+                </li>
+                <li class="parent"><a href="bukcoja_data.html"><i class="icon mdi mdi-chart-donut"></i><span>Data</span></a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="be-content">
+
+      <div class="main-content container-fluid">
+        <div class="row"><!--1-->
+          <div class="col-lg-6">
+            <div class="card" id="fer">
+              <div class="card-header card-header-divider">Fire Evacuation Route
+                <span class="card-subtitle">Watch Carefully.</span>
+              </div>
+              <div class="card-body" id="card-body-unity">
+
+                <div class="webgl-content" id="webgl-content-unity" style="width:90%">
+                  <div id="gameContainer"></div>
+                  <div class="footer">
+                    <div class="webgl-logo"></div>
+                    <div class="fullscreen" onclick="gameInstance.SetFullscreen(1);"></div>
+                    <div class="title">Probono</div> 
+                  </div>
+                  <br/>
+                </div>
+
+
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card"  id=datamonitor1">
+              <div class="card-header card-header-divider">Data Monitor
+                <span class="card-subtitle">Temperature, Humidity</span>
+              </div>
+              <div class="card-body">
+                <canvas id="myChart" height="156"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row"><!--2-->
+          <div class="col-lg-6">
+            <div class="card">
+              <div class="card-header card-header-divider" >현재 상황
+                <span class="card-subtitle">Watch Carefully.</span>
+              </div>
+              <div class="card-body">
+                <div class='frame' id="status" style="display:-webkit-box;height: 92px">
+                  <div style="-webkit-box-flex:1;width:33%;margin:5px;">
+                    <img id="red_led" src="assets/img/gray_alert.png" width="40" height="45" />
+                    <span id="red_text" style="font-size: 25px;text-align: center;margin: 10px">FIRE!</span>
+                  </div>
+                  <div style="-webkit-box-flex:1;width:33%;margin:5px;">
+                    <img id="yellow_led" src="assets/img/gray_alert.png" width="40" height="45" />
+                    <span id="yellow_text" style="font-size: 25px;text-align: center;margin:10px">WARNING</span>
+                  </div>
+                  <div style="-webkit-box-flex:1;width:33%;margin:5px;">
+                    <img id="green_led" src="assets/img/gray_alert.png" width="40" height="45" />
+                    <span id="green_text" style="font-size: 25px;text-align: center;margin:10px">SAFE</span>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card">
+
+              <div class="card-header card-header-divider">
+               <div style="display:-webkit-box;">
+                <div style="-webkit-box-flex:1;width: 82%">Data Monitor
+                  <span class="card-subtitle" >Flame, CO</span>
+                </div>
+                <div id="demo" style="-webkit-box-flex:1;width: 18%">
+                  <div class="wrapper">
+                    <div class="content">
+                      <ul>
+                        <a href="#" id="first">
+                          <li style="font-size: 10px" onclick="onmenuclick(this);">101호 화재경보기</li>
+                        </a>
+                        <a href="#" id="second">
+                          <li style="font-size: 10px" onclick="onmenuclick(this);">102호 화재경보기</li>
+                        </a>
+                        <a href="#" id="third">
+                          <li style="font-size: 10px" onclick="onmenuclick(this)">103호 화재경보기</li>
+                        </a>
+                      </ul>
+                    </div>
+                    <div class="parent" id="parent" style="font-size: 10px">101호 화재경보기</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+
+              <div style="display:-webkit-box;">
+
+                <div style="-webkit-box-flex:1;width: 50%">
+                  <canvas id="flameChart" height="80"></canvas>
+                </div>
+
+                <div style="-webkit-box-flex:1;width: 50%">
+                  <canvas id="coChart" height="80"></canvas>
+                </div>
+              </div>
+              <br>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row"><!--3-->
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-header card-header-divider">Announcement<br>
+             <span class="card-subtitle">
+              1. <span style="color: red">화재 발생층 </span>및 <span style="color: red">직상층</span> 우선 방송 피난 지시 <br> 
+              2. 화재 발생층 <span style="color: red">직하층 순</span>으로 방송 피난 지시
+            </span></div>
+
+            <div class="card-body">
+              <!--<a href="#" id="myButton" onclick="startBroadcast()" onmouseup="btn_up()" onmouseout="btn_out()">안내 방송 시작</a>-->
+              <input type='button' class="btn btn-rounded btn-space btn-success" id='myButton' onclick='startBroadcast()' onmouseup='btn_up()' onmouseout='btn_out()' value='START'/><br>
+              <span id='guide'></span><br/>
+              <form name="submit" method="post" action="sendBroadcast.php">
+                <textarea cols='40' rows='8' id='result' name='msg' placeholder='*start-stop-submit'></textarea><br><br>
+                <input type='submit' class="btn btn-rounded btn-space btn-warning" id='submit' value='SUBMIT'/>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="card" style="height:240px;padding:20px;border:10px solid;border-color:lightgray">
+            <h3 style="text-align: center; padding-bottom:10px">화재 시 관리자 대응 메뉴얼</h3>
+            <h4>1단계: 화재 발생 위치 및 인명 확인 & 119 신고 확인 </h4>
+            <h4>2단계: 경종 및 비상방송으로 화재 사실 알림</h4>
+            <h4>3단계: 최적의 대피 경로로 대피 유도 </h4>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script type = "text/javascript">
+  var tempT=new Array(2);
+  var humT=new Array(2);
+  var flameT=new Array(2);
+  var coT=new Array(2);
+  var personT=new Array(2);
+  var deviceidT=new Array(2); 
+  var r_count=0;
+  var y_count=0;
+  var g_count=0;
+  $(document).ready(function(){
+
+    updateData2();
+
+  });    
+  function updateData2(){
+
+
+    $.ajax({
+      url:"checkdataHome.php",
+      type:"post",
+      cache:false,
+      dataType:"json",
+      success:function(data){
+        //alert(data);
+        for(var i=0;i<2;i++){
+          flameT[i]=data[i].flame;
+          tempT[i]=data[i].cen;
+          humT[i]=data[i].hum;
+          coT[i]=data[i].co;
+          personT[i]=data[i].person;
+          deviceidT[i]=data[i].deviceid;
+        }
+        //alert(tempT[0]);
+
+
+      },
+      error:function(e){
+          //alert("Failed");
+        }
+      });
+
+    setTimeout("updateData2()", 500);
+
+  }
+
+
+  function onmenuclick(element){
+    document.getElementById('parent').innerHTML=element.innerHTML;
+  }
+//table update하는 
+setInterval("checkFire()", 500);
+function replaceSrc(img)
+{
+
+
+  var dt = new Date();
+
+  if(img.src.length >= 0)
+  {
+    img.src = img.src.split("?")[0] + "?" + dt.getTime();
+                //javascript:alert(document.lastModified);
+              }
+
+            }
+            replaceSrc();
+            function checkFire(){
+
+  //빨간색 led가 켜지는 조건
+  if((flameT[0]==0 || flameT[1]==0) && r_count==0){
+    r_count++;
+    y_count=0;
+    g_count=0;
+    $("#red_led").removeAttr('src').attr("src","assets/img/r_alert.png?a=" + new Date().getTime());
+    $("#yellow_led").removeAttr('src').attr("src","assets/img/gray_alert.png?a=" + new Date().getTime());
+    $("#green_led").removeAttr('src').attr("src","assets/img/gray_alert.png?a=" + new Date().getTime());
+
+    document.getElementById("red_text").style.color='#000000';
+    document.getElementById("yellow_text").style.color='#b9b9b9';
+    document.getElementById("green_text").style.color='#b9b9b9';
+  } 
+  //노란색 led가 켜지는 조건
+  else if(((tempT[0]>=30 && flameT[0]==1) || (tempT[1]>=30 && flameT[1]==1))&& y_count==0){
+    r_count=0;
+    y_count++;
+    g_count=0;
+    $("#red_led").removeAttr('src').attr("src","assets/img/gray_alert.png?a=" + new Date().getTime());
+    $("#yellow_led").removeAttr('src').attr("src","assets/img/y_alert.png?a=" + new Date().getTime());
+    $("#green_led").removeAttr('src').attr("src","assets/img/gray_alert.png?a=" + new Date().getTime());
+
+    document.getElementById("red_text").style.color='#b9b9b9';
+    document.getElementById("yellow_text").style.color='#000000';
+    document.getElementById("green_text").style.color='#b9b9b9';
+
+  }
+  //초록색 led가 켜지는 조건
+  else if(((flameT[0]==1 && tempT[0]<30) && (flameT[1]==1 && tempT[1]<30)) && g_count==0){
+   r_count=0;
+   y_count=0;
+   g_count++;
+   $("#red_led").removeAttr('src').attr("src","assets/img/gray_alert.png?a=" + new Date().getTime());
+   $("#yellow_led").removeAttr('src').attr("src","assets/img/gray_alert.png?a=" + new Date().getTime());
+   $("#green_led").removeAttr('src').attr("src","assets/img/g_alert.png?a=" + new Date().getTime());
+
+   document.getElementById("red_text").style.color='#b9b9b9';
+   document.getElementById("yellow_text").style.color='#b9b9b9';
+   document.getElementById("green_text").style.color='#000000';
+ }
+} 
+</script>
+<script>
+  var count = 10;
+  var cen_piedata1="<?php echo $cen_data1; ?>";
+  var cen_piedata2="<?php echo $cen_data2; ?>";
+  var cen_piedata3="<?php echo $cen_data3; ?>";
+  var hum_piedata1="<?php echo $hum_data1; ?>";
+  var hum_piedata2="<?php echo $hum_data2; ?>";
+  var hum_piedata3="<?php echo $hum_data3; ?>";
+  
+  //php배열을 가져와서 자바스크립트 배열로 넣는 방법
+  var datetimes= <?php echo json_encode($datetime) ?>;
+
+  var mylabels=new Array(10);
+  //alert(datetimes[0]);
+  
+  for(var i=0;i<10;i++){
+    var str=datetimes[i].split(" ")[1];
+    mylabels[i]=str.substring(3);
+    //alert(mylabels[i]);
+  }
+  var last_label=new Array();
+  for(var j=0;j<10;j++){
+    last_label[j]=new TeamPlayerLabel(mylabels[j],"온도","습도");
+  }
+  var temp_values= <?php echo json_encode($temp_data) ?>;
+  var hum_values= <?php echo json_encode($hum_data) ?>;
+  var data = {
+    labels : [mylabels[0],mylabels[1],mylabels[2],mylabels[3],mylabels[4],
+    mylabels[5] ,mylabels[6],mylabels[7], mylabels[8], mylabels[9]],
+ 
+    datasets : [
+    {
+     data : [temp_values[0],temp_values[1],temp_values[2],temp_values[3],temp_values[4],
+     temp_values[5],temp_values[6],temp_values[7],temp_values[8],temp_values[9]],
+     borderColor: '#CC3D3D',
+     backgroundColor:'rgba(255,99,132,0.1)',
+     pointBorderColor:'rgba(255,255,255,1)',
+     pointBackgroundColor:'#CC3D3D',
+     pointRadius:4,
+     label:"온도"
+   },
+   {
+    label:"습도",
+    data : [hum_values[0],hum_values[1],hum_values[2],hum_values[3],hum_values[4],
+    hum_values[5],hum_values[6],hum_values[7],hum_values[8],hum_values[9]],
+    pointBorderColor:'rgba(255,255,255,1)',
+    pointRadius:4,
+    borderColor:'#3439f3',
+      pointBackgroundColor:'#3439f3',   //point 색깔 
+      backgroundColor:'rgba(54,162,235,0.1)'
+
+    }
+    ]
+  }
+
+
+ var updateTempHumData = function(oldData){
+  var labels = oldData['labels'];
+  var dataSetA = oldData["datasets"][0]["data"];
+  var dataSetB = oldData["datasets"][1]["data"];
+  labels.shift();
+  var date=new Date();
+  var string=date.getMinutes()+":"+date.getSeconds();
+  labels.push(string);
+  var newDataA = tempT[0];
+  var newDataB = humT[0];
+  dataSetA.push(newDataA);
+  dataSetB.push(newDataB);
+  dataSetA.shift();
+  dataSetB.shift(); 
+
+};
+var updateData = function(oldData,newData){
+  var data;
+  var labels = oldData['labels'];
+  var dataSet = oldData["datasets"][0]["data"];
+  labels.shift();
+  var date=new Date();
+  var string=date.getMinutes()+":"+date.getSeconds();
+  labels.push(string);
+  
+  if(document.getElementById('parent').innerHTML=="101호 화재경보기"){
+    var data=newData[0];
+  }
+  else if(document.getElementById('parent').innerHTML=="103호 화재경보기"){
+    var data=newData[1];
+  }
+    if(data==1)
+      data=0;
+    else if(data==0)
+      data=1;
+    dataSet.push(data);
+    dataSet.shift();
+  };
+
+  var optionsAnimation = {
+    scaleOverride : true,
+    scaleSteps : 1,
+    scaleStepWidth : 1,
+    scaleStartValue : 0
+  }
+  var optionsNoAnimation = {
+    animation : false,
+    scaleOverride : true,
+    scaleSteps : 20,
+    scaleStepWidth : 10,
+    scaleStartValue : 0
+  }
+
+  var ctx = document.getElementById("myChart");
+  myNewChart = new Chart(ctx,{
+    multiTooltipTemplate: function (self) {
+      return self.label[self.datasetLabel] + ': ' + self.value;
+    },
+    type:'line',
+    data:data,
+    options: {
+
+      animation:false,
+      scales: {
+        xAxes: [{
+         gridLines: {
+           display:true
+         }
+       }],
+       yAxes: [{
+        gridLines: {
+          display:true
+        } ,  
+        unitStepSize: '20', 
+        ticks:{
+
+          stepSize:10,
+          min:0,
+          max:70
+        }
+      }]
+    }
+  },
+
+});
+  setInterval(function(){
+
+   myNewChart = new Chart(ctx,{
+    multiTooltipTemplate: function (self) {
+      return self.label[self.datasetLabel] + ': ' + self.value;
+    },
+    type:'line',
+    data:data,
+    options: {
+
+      animation:false,
+      scales: {
+        xAxes: [{
+         gridLines: {
+           display:true
+         }
+       }],
+       yAxes: [{
+        gridLines: {
+          display:true
+        } ,  
+        unitStepSize: '20', 
+        ticks:{
+
+          stepSize:10,
+          min:0,
+          max:70
+        }
+      }]
+    }
+  },
+
+});
+   updateTempHumData(data);}, 2000
+   );
+  function TeamPlayerLabel(label, team1Label, team2Label) {
+    this.label = label;
+    this["Team 1"] = team1Label;
+    this["Team 2"] = team2Label;
+  }
+  TeamPlayerLabel.prototype.toString = function () {
+    return this.label;
+  }
+
+  var flame_values= <?php echo json_encode($flame_data) ?>;
+  var flameChart=document.getElementById("flameChart");
+  var flame_data = {
+    labels : ["1","2","3","4","5","6","7","8","9","10"],
+    datasets : [
+    {
+      steppedLine: true,
+      data : [flame_values[0],flame_values[1],flame_values[2],flame_values[3],flame_values[4],flame_values[5],
+      flame_values[6],flame_values[7],flame_values[8],flame_values[9]],
+      borderColor: '#FF0000',
+                //fill:false,
+                backgroundColor:'#ffffff',
+                    //pointBorderColor:'rgba(255,255,255,1)',
+                    //pointBackgroundColor:'rgba(255,99,132,1)',
+                    pointRadius:0,
+                    label:"불꽃"
+                  }
+                  ]
+                }
+                myFlameChart = new Chart(flameChart,{
+                 type:'line',
+                 data:flame_data,
+                 options: {
+                   // legend: {
+                   //  display: false
+                   //},
+                   animation:false,
+                   scales: {
+                    yAxes: [{
+                      gridLines: {
+                        display:false,
+                        lineWidth:0
+                      },                            
+                      ticks:{
+
+                        stepSize:1,
+                        min:0,
+                        max:1,
+                        callback: function(label, index, labels) {
+                          switch (label) {
+                            case 0:
+                            return '미감지';
+                            case 1:
+                            return '감지';
+                          }
+                        }
+                      }
+                    }],
+                    xAxes: [{
+                      gridLines: {
+                        display:false
+                      },
+                      ticks: {
+                                display: false //this will remove only the label
+                              }
+                            }]
+                          }
+                        }
+                      });
+                setInterval(function(){
+                 myFlameChart = new Chart(flameChart,{
+                   type:'line',
+                   data:flame_data,
+                   options: {
+                   // legend: {
+                   //  display: false
+                   //},
+                   animation:false,
+                   scales: {
+                    yAxes: [{
+                      gridLines: {
+                        display:false,
+                        lineWidth:0
+                      },                            
+                      ticks:{
+
+                        stepSize:1,
+                        min:0,
+                        max:1,
+                        callback: function(label, index, labels) {
+                          switch (label) {
+                            case 0:
+                            return '미감지';
+                            case 1:
+                            return '감지';
+                          }
+                        }
+                      }
+                    }],
+                    xAxes: [{
+                      gridLines: {
+                        display:false
+                      },
+                      ticks: {
+                                display: false //this will remove only the label
+                              }
+                            }]
+                          }
+                        }
+                      });
+                 updateData(flame_data,flameT);}, 2000
+                 );
+
+                var co_values= <?php echo json_encode($co_data) ?>;
+                var coChart=document.getElementById("coChart");
+                var co_data = {
+                  labels : ["1","2","3","4","5", "6", "7", "8", "9", "10"],
+                  datasets : [
+                  {
+                    steppedLine: true,
+                    data : [co_values[0],co_values[1],co_values[2],co_values[3],co_values[4],co_values[5],
+                    co_values[6],co_values[7],co_values[8],co_values[9]],
+                    borderColor: '#1DDB16',
+                    backgroundColor:'#ffffff',
+                    //pointBorderColor:'#1DDB16',
+                    //pointBackgroundColor:'#1DDB16',
+                    pointRadius:0,
+                    label:"일산화탄소"
+                  }
+                  ]
+                }
+                myCoChart = new Chart(coChart,{
+                 type:'line',
+                 data:co_data,
+                 options: {
+                   // legend: {
+                   //  display: false
+                   //},
+                   animation:false,
+                   scales: {
+                    yAxes: [{
+                      gridLines: {
+                        display:false,
+                        lineWidth:0
+                      },                            
+                      ticks:{
+
+                        stepSize:1,
+                        min:0,
+                        max:1,
+                        callback: function(label, index, labels) {
+                          switch (label) {
+                            case 0:
+                            return '미감지';
+                            case 1:
+                            return '감지';
+                          }
+                        }
+
+                      }
+                    }],
+                    xAxes: [{
+                      gridLines: {
+                        display:false
+                      },
+                      ticks: {
+                                display: false //this will remove only the label
+                              }
+                            }]
+                          }
+                        }
+                      });
+                setInterval(function(){
+                 myCoChart = new Chart(coChart,{
+                   type:'line',
+                   data:co_data,
+                   options: {
+                   // legend: {
+                   //  display: false
+                   //},
+                   animation:false,
+                   scales: {
+                    yAxes: [{
+                      gridLines: {
+                        display:false,
+                        lineWidth:0
+                      },                            
+                      ticks:{
+
+                        stepSize:1,
+                        min:0,
+                        max:1,
+                        callback: function(label, index, labels) {
+                          switch (label) {
+                            case 0:
+                            return '미감지';
+                            case 1:
+                            return '감지';
+                          }
+                        }
+                      }
+                    }],
+                    xAxes: [{
+                      gridLines: {
+                        display:false
+                      },
+                      ticks: {
+                                display: false //this will remove only the label
+                              }
+                            }]
+                          }
+                        }
+                      });
+                 updateData(co_data,coT);}, 2000
+                 );
+               </script>
+
+               <script src="assets/lib/jquery/jquery.min.js" type="text/javascript"></script>
+               <script src="assets/lib/perfect-scrollbar/js/perfect-scrollbar.min.js" type="text/javascript"></script>
+               <script src="assets/lib/bootstrap/dist/js/bootstrap.bundle.min.js" type="text/javascript"></script>
+               <script src="assets/js/app.js" type="text/javascript"></script>
+               <script src="assets/lib/jquery-flot/jquery.flot.js" type="text/javascript"></script>
+               <script src="assets/lib/jquery-flot/jquery.flot.pie.js" type="text/javascript"></script>
+               <script src="assets/lib/jquery-flot/jquery.flot.time.js" type="text/javascript"></script>
+               <script src="assets/lib/jquery-flot/jquery.flot.resize.js" type="text/javascript"></script>
+               <script src="assets/lib/jquery-flot/plugins/jquery.flot.orderBars.js" type="text/javascript"></script>
+               <script src="assets/lib/jquery-flot/plugins/curvedLines.js" type="text/javascript"></script>
+               <script src="assets/lib/jquery-flot/plugins/jquery.flot.tooltip.js" type="text/javascript"></script>
+               <script src="assets/lib/jquery.sparkline/jquery.sparkline.min.js" type="text/javascript"></script>
+               <script src="assets/lib/countup/countUp.min.js" type="text/javascript"></script>
+               <script src="assets/lib/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
+               <script src="assets/lib/jqvmap/jquery.vmap.min.js" type="text/javascript"></script>
+               <script src="assets/lib/jqvmap/maps/jquery.vmap.world.js" type="text/javascript"></script>
+               <script src="assets/js/app-dashboard.js" type="text/javascript"></script>
+               <script type="text/javascript">
+                $(document).ready(function(){
+        //-initialize the javascript
+        App.init();
+        App.dashboard();
+
+      });
+    </script>
+  </body>
+  </html>
