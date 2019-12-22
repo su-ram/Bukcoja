@@ -94,6 +94,4 @@ SW
 
 ## :tv: 작동 영상 Video 
 
-&nbsp;
-
 https://www.youtube.com/watch?v=FJx439WB9ak
