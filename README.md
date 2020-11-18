@@ -25,7 +25,7 @@ SW
 
 
 &nbsp;
-##  :art:  시스템 설계도 System Architecture
+##  :vertical_traffic_light:  시스템 설계도 System Architecture
 
 
 ##  :art:  사용 기술 Skill sets
