@@ -3,7 +3,7 @@
   <img src = "https://user-images.githubusercontent.com/20367043/70792430-951df300-1ddc-11ea-95a9-135fb6b33c23.png" width = "100%"/>
   </div>
   
-> 북코자
+> 북코자 / 2018. 03 ~ 2018.11 / 4명
  
 &nbsp;
 
@@ -23,10 +23,10 @@ SW
 
 &nbsp;화재 경보기에서 여러 센서를 통해 화재를 감지하고, 웹 페이지와 모바일 앱은 현재 상황을 실시간으로 보여준다. 화재가 발생하면 SKT의 LTE 통신망을 통해 주변 기기들을 제어하여 화재 상황을 알리고 비상경로로 유도하여 대피할 수 있도록 한다. 
 
-개발 기간 | 2018.03 ~ 2018.10
-&nbsp;팀원 | 4명 
 
 &nbsp;
+##  :art:  시스템 설계도 System Architecture
+
 
 ##  :art:  사용 기술 Skill sets
 - Mobile os : Android - Java
